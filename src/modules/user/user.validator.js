@@ -20,3 +20,10 @@ export const loginSchema = {
         password: generalRules.password.required(),
     }).required()
 };
+export const updatePasswordSchema = {
+    body: Joi.object({
+        oldPassword: generalRules.password.required(),
+        newPassword: generalRules.password.required(),
+        confirmNewPassword: Joi.string().valid(Joi.ref("newPassword")).required()
+    }),
+};

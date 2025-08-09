@@ -47,7 +47,6 @@ export const signup = async (req, res, next) => {
 };
 
 // ====================================== LOGIN ======================================
-
 export const login = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
@@ -70,7 +69,6 @@ export const login = async (req, res, next) => {
 };
 
 // ====================================== LOGOUT ======================================
-
 export const logout = async (req, res, next) => {
     const revokedToken = revokeToken.create({
         tokenId: req.decoded.jti,
@@ -115,7 +113,30 @@ export const confirmEmail = async (req, res, next) => {
     }
     user.confirmed = true;
     await user.save();
-    console.log(user);
 
     res.status(200).json({ message: "Email confirmed successfully" });
+};
+
+// ====================================== UPDATE PASSWORD ======================================
+export const updatePassword = async (req, res, next) => {
+    const { oldPassword, newPassword } = req.body;
+
+    // Check if old password is correct
+    if (!await Compare({plainText: oldPassword, cipherText: req.user.password})) {
+        throw new Error("Old password is incorrect", { cause: 401 });
+    }
+
+    // Check if new password is the same as old password
+    if ( oldPassword === newPassword ) {
+        throw new Error("New password cannot be the same as old password", { cause: 400 });
+    }
+
+    // Hash new password
+    const hashedPassword = await Hash ({ plainText: newPassword });
+
+    // Update user password
+    req.user.password = hashedPassword;
+    await req.user.save();
+
+    res.status(200).json({ message: "Password updated successfully " });
 };
