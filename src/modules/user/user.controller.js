@@ -12,6 +12,8 @@ userRouter.post('/logout', authentication, UC.logout)
 userRouter.get('/profile', authorization(userRole), authentication, UC.getUserProfile);
 userRouter.delete('/deleteUser/:id', UC.deleteUser);
 userRouter.get('/confirmEmail/:token', UC.confirmEmail);
-userRouter.patch('/updatePassword', validation(UV.updatePasswordSchema), authentication, UC.updatePassword)
+userRouter.patch('/updatePassword', validation(UV.updatePasswordSchema), authentication, UC.updatePassword);
+userRouter.patch('/forgetPassword', validation(UV.forgetPasswordSchema), UC.forgetPassword);
+userRouter.patch('/resetPassword', validation(UV.resetPasswordSchema), UC.resetPassword);
 
 export default userRouter;

@@ -1,4 +1,4 @@
-import { nanoid } from "nanoid";
+import { nanoid, customAlphabet } from "nanoid";
 import { User } from "../../db/models/user.model.js";
 import { generateToken, verifyToken, Hash, Compare, Encrypt, Decrypt, eventEmitter } from "../../utils/index.js";
 import revokeToken from "../../db/models/revokeToken.model.js";
@@ -49,7 +49,7 @@ export const signup = async (req, res, next) => {
 // ====================================== LOGIN ======================================
 export const login = async (req, res, next) => {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email, confirmed: true });
     if (!user) {
         throw new Error("User not found", { cause: 404 });
     }
@@ -134,4 +134,54 @@ export const updatePassword = async (req, res, next) => {
     await req.user.save();
 
     res.status(200).json({ message: "Password updated successfully " });
+};
+
+// ====================================== FORGET PASSWORD ======================================
+export const forgetPassword = async (req, res, next) => {
+    const { email } = req.body;
+
+    // Check if user exists
+    const user = await User.findOne({ email, confirmed: true });
+    if (!user) {
+        throw new Error("User not found", { cause: 404 });
+    }
+
+    // Generate OTP
+    const otp = customAlphabet('0123456789', 6)();
+
+    // Save OTP to user and emit event
+    user.otp = await Hash({ plainText: otp });
+    eventEmitter.emit("forgetPassword", { email, otp });
+    await user.save();
+
+    res.status(200).json({ message: "Success" });
+};
+
+// ====================================== RESET PASSWORD ======================================
+export const resetPassword = async (req, res, next) => {
+    const { email, otp, newPassword } = req.body;
+
+    // Check if user exists
+    const user = await User.findOne({ email, confirmed: true });
+    if (!user) {
+        throw new Error("User not found", { cause: 404 });
+    }
+
+    // Check if otp expired
+    const otpExpirationTime = 60 * 3;
+    if ((new Date() - user.updatedAt) / 1000 > otpExpirationTime) {
+        throw new Error("OTP expired", { cause: 400 });
+    }
+
+    // Check if OTP is correct
+    if (!await Compare({ plainText: otp, cipherText: user.otp })) {
+        throw new Error("Invalid OTP", { cause: 400 });
+    }
+
+    // Hash new password and save it
+    user.password = await Hash({ plainText: newPassword });
+    user.otp = "";
+    await user.save();
+
+    res.status(200).json({ message: "Password changed successfully" });
 };

@@ -27,3 +27,16 @@ export const updatePasswordSchema = {
         confirmNewPassword: Joi.string().valid(Joi.ref("newPassword")).required()
     }),
 };
+export const forgetPasswordSchema = {
+    body: Joi.object({
+        email: generalRules.email.required()
+    }),
+}
+export const resetPasswordSchema = {
+    body: Joi.object({
+        email: generalRules.email.required(),
+        otp: Joi.string().length(6).required(),
+        newPassword: generalRules.password.required(),
+        confirmNewPassword: Joi.string().valid(Joi.ref("newPassword")).required()
+    }),
+}

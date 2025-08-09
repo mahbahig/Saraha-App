@@ -18,3 +18,15 @@ eventEmitter.on("sendEmail", async (data) => {
         html: `<button style="width: 100%; padding: 0px 10px; background-color: blue;"><a href="${link}">Confirm Email<a/></button>`,
     });
 });
+
+eventEmitter.on("forgetPassword", async (data) => {
+    const { email, otp } = data;
+    console.log(data);
+    
+
+    const isSent = await sendEmail({
+        to: email,
+        subject: "Confirm OTP. It is valid for 3 minutes",
+        html: `<p>Your OTP is: <strong>${otp}</strong></p>`,
+    });
+});
