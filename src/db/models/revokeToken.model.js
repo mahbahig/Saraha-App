@@ -5,7 +5,7 @@ const revokeTokenSchema = new mongoose.Schema(
         tokenId: {
             type: String,
             required: true,
-            unique: true
+            unique: [true, "Please login again"]
         },
         expiresAt: {
             type: String,

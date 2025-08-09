@@ -72,13 +72,10 @@ export const login = async (req, res, next) => {
 // ====================================== LOGOUT ======================================
 
 export const logout = async (req, res, next) => {
-    // console.log(req.decoded);
     const revokedToken = revokeToken.create({
         tokenId: req.decoded.jti,
         expiresAt:  req.decoded.exp
     });
-    
-
     res.status(200).json({ message: "Logout successful" });
 };
 

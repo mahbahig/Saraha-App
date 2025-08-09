@@ -1,3 +1,4 @@
+import revokeToken from '../db/models/revokeToken.model.js';
 import { User } from '../db/models/user.model.js';
 import { verifyToken } from '../utils/token/verifyToken.js';
 
@@ -29,6 +30,11 @@ export const authentication = async (req, res, next) => {
     }
     req.decoded = decoded;
 
+    // Check if token is revoked
+    const revokedToken = await revokeToken.findOne({ tokenId: decoded.jti });
+    if (revokedToken) {
+        throw new Error("Token has been revoked, please login again", { cause: 401 });
+    }
     // Check user existence and attach user to request
     const user = await User.findById(decoded.id);
     if (!user) {
