@@ -10,7 +10,6 @@ userRouter.post('/signup', validation(UV.signupSchema), UC.signup);
 userRouter.post('/login', validation(UV.loginSchema), UC.login);
 userRouter.post('/logout', authentication, UC.logout)
 userRouter.get('/profile', authorization(userRole), authentication, UC.getUserProfile);
-userRouter.put('/updateUser/:id', UC.updateUser);
 userRouter.delete('/deleteUser/:id', UC.deleteUser);
 userRouter.get('/confirmEmail/:token', UC.confirmEmail);
 userRouter.patch('/updatePassword', validation(UV.updatePasswordSchema), authentication, UC.updatePassword)

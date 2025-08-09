@@ -83,11 +83,6 @@ export const getUserProfile = async (req, res, next) => {
     res.status(200).json({ message: "success", user: req.user });
 };
 
-// ====================================== UPDATE USER ======================================
-export const updateUser = async (req, res, next) => {
-    // TODO: Implement user update logic
-};
-
 // ====================================== DELETE USER ======================================
 export const deleteUser = async (req, res, next) => {
     const user = await User.findByIdAndDelete(req.params.id);
