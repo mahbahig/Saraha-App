@@ -21,10 +21,7 @@ eventEmitter.on("sendEmail", async (data) => {
 
 eventEmitter.on("forgetPassword", async (data) => {
     const { email, otp } = data;
-    console.log(data);
-    
-
-    const isSent = await sendEmail({
+    await sendEmail({
         to: email,
         subject: "Confirm OTP. It is valid for 3 minutes",
         html: `<p>Your OTP is: <strong>${otp}</strong></p>`,
