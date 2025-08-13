@@ -42,7 +42,7 @@ export const signup = async (req, res, next) => {
 // ====================================== LOGIN ======================================
 export const login = async (req, res, next) => {
     const { email, password } = req.body;
-    const user = await US.getUserByEmail({ email });
+    const user = await US.getUserByEmail(email);
     if (!user) {
         throw new Error("User not found", { cause: 404 });
     }
@@ -140,6 +140,34 @@ export const updatePassword = async (req, res, next) => {
     await req.user.save();
 
     res.status(200).json({ message: "Password updated successfully " });
+};
+
+// ====================================== UPDATE USER ======================================
+export const updateUser = async (req, res, next) => {
+    const { name, email, role, age, phone, gender } = req.body;
+
+    if (name) req.user.name = name;
+    if (role) req.user.role = role;
+    if (age) req.user.age = age;
+    if (gender) req.user.gender = gender;
+
+    if (email) {
+        if (await US.getUserByEmail(email)) {
+            throw new Error("Email already exists", { cause: 400 });
+        }
+        req.user.email = email;
+    }
+
+    if (phone) {
+        req.user.phone = Encrypt({
+            plainText: phone,
+            encryptionKey: process.env.PHONE_ENCRYPTION_KEY,
+        });
+    }
+
+    await req.user.save();
+
+    res.status(200).json({ message: "Password updated successfully" });
 };
 
 // ====================================== FORGET PASSWORD ======================================

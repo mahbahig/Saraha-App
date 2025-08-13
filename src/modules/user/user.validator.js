@@ -31,7 +31,7 @@ export const forgetPasswordSchema = {
     body: Joi.object({
         email: generalRules.email.required()
     }),
-}
+};
 export const resetPasswordSchema = {
     body: Joi.object({
         email: generalRules.email.required(),
@@ -39,4 +39,15 @@ export const resetPasswordSchema = {
         newPassword: generalRules.password.required(),
         confirmNewPassword: Joi.string().valid(Joi.ref("newPassword")).required()
     }),
-}
+};
+export const updateUserSchema = {
+    body: Joi.object({
+        name: Joi.string().min(3).max(15),
+        email: generalRules.email,
+        role: Joi.string().valid(userRole.user, userRole.admin),
+        age: Joi.number().min(18).max(60),
+        phone: Joi.string(),
+        gender: Joi.string()
+            .valid(userGender.male, userGender.female),
+    }),
+};
