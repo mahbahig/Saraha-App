@@ -7,7 +7,7 @@ export const authentication = async (req, res, next) => {
     // Check if token is provided
     if (!authorization) {
         throw new Error("Token not found", {cause: 401})
-    }    
+    }
 
     // Split the token into prefix and token
     const [prefix, token] = authorization.split(' ') || [];

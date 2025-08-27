@@ -47,7 +47,6 @@ export const updateUserSchema = {
         role: Joi.string().valid(userRole.user, userRole.admin),
         age: Joi.number().min(18).max(60),
         phone: Joi.string(),
-        gender: Joi.string()
-            .valid(userGender.male, userGender.female),
+        gender: Joi.string().valid(userGender.male, userGender.female),
     }),
 };

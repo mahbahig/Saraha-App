@@ -4,7 +4,7 @@ import { generateToken } from "../token/generateToken.js";
 
 export const eventEmitter = new EventEmitter();
 
-eventEmitter.on("sendEmail", async (data) => {
+eventEmitter.on("confirmEmail", async (data) => {
     const { email } = data;
     const confirmToken = generateToken({
         payload: { email },
