@@ -1,7 +1,7 @@
 import { customAlphabet, nanoid } from "nanoid";
 import revokeToken from "../../db/models/revokeToken.model.js";
 import { User } from "../../db/models/user.model.js";
-import { Compare, Encrypt, eventEmitter, generateToken, Hash, verifyToken } from "../../utils/index.js";
+import { Compare, Decrypt, Encrypt, eventEmitter, generateToken, Hash, verifyToken } from "../../utils/index.js";
 
 // ====================================== SIGNUP ======================================
 export const signup = async ({ name, age, email, password, phone, gender }) => {
@@ -95,6 +95,19 @@ export const logout = async ({ token }) => {
         tokenId: token.jti,
         expiresAt: token.exp,
     });
+};
+
+// ====================================== GET PROFILE ======================================
+export const getProfile = async ({ user }) => {
+    user.phone = Decrypt({ cipherText: user.phone});
+    const userData = {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        age: user.age,
+        phone: user.phone,
+    }
+    return userData;
 };
 
 // ====================================== UPDATE PASSWORD ======================================

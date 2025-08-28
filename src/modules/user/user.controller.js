@@ -34,6 +34,13 @@ export const logout = async (req, res, next) => {
     res.status(200).json({ success: true, message: "Logout successful" });
 };
 
+// ====================================== GET PROFILE ======================================
+export const getProfile = async (req, res, next) => {
+    const user = await US.getProfile({ user: req.user });
+
+    res.status(200).json({ success: true, user });
+};
+
 // ====================================== UPDATE PASSWORD ======================================
 export const updatePassword = async (req, res, next) => {
     const { oldPassword, newPassword } = req.body;
