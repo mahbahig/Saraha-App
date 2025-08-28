@@ -8,6 +8,7 @@ const userRouter = Router();
 userRouter.post('/signup', validation(UV.signupSchema), UC.signup);
 userRouter.get('/confirmEmail/:token', UC.confirmEmail);
 userRouter.post('/login', validation(UV.loginSchema), UC.login);
+userRouter.post("/gmailLogin", UC.gmailLogin);
 userRouter.post('/logout', authentication, UC.logout)
 userRouter.get('/profile', authentication, UC.getProfile);
 userRouter.patch('/updateUser', validation(UV.updateUserSchema), authentication, UC.updateUser);

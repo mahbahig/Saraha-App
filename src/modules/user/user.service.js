@@ -1,7 +1,8 @@
 import { customAlphabet, nanoid } from "nanoid";
 import revokeToken from "../../db/models/revokeToken.model.js";
-import { User } from "../../db/models/user.model.js";
+import { User, userProvider } from "../../db/models/user.model.js";
 import { Compare, Decrypt, Encrypt, eventEmitter, generateToken, Hash, verifyToken } from "../../utils/index.js";
+import  { OAuth2Client } from "google-auth-library";
 
 // ====================================== SIGNUP ======================================
 export const signup = async ({ name, age, email, password, phone, gender }) => {
@@ -78,6 +79,39 @@ export const login = async ({ email, password }) => {
     });
     if (!match) {
         throw new Error("Wrong password", { cause: 401 });
+    }
+
+    // Create JWT token
+    const token = generateToken({
+        payload: { id: user._id, email: user.email },
+        signature: process.env.TOKEN_SECRET_USER,
+        options: { jwtid: nanoid(), expiresIn: "1h" },
+    });
+    return token;
+};
+
+// ====================================== GMAIL LOGIN ======================================
+export const gmailLogin = async ({ idToken }) => {
+    const client = new OAuth2Client();
+    async function verify() {
+        const ticket = await client.verifyIdToken({
+            idToken,
+            audience: process.env.WEB_CLIENT_ID,
+        });
+        const payload = ticket.getPayload();
+        return payload;
+    }
+    const { email, email_verified, name } = await verify();
+
+    // Check if user logged in using system
+    let user = await getUserByEmail({ email });
+    if (user && user.provider != userProvider.google) {
+        throw new Error("Email already exists", { cause: 400 });
+    }
+
+    // If user not found, create new user
+    if (!user) {
+        user = await User.create({ name, email, provider: userProvider.google, confirmed: email_verified });
     }
 
     // Create JWT token

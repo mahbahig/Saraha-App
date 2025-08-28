@@ -27,6 +27,15 @@ export const login = async (req, res, next) => {
     res.status(200).json({ success: true, message: "Login successful", token });
 };
 
+// ====================================== GMAIL LOGIN ======================================
+export const gmailLogin = async (req, res, next) => {
+    const { idToken } = req.body;
+
+    const token = await US.gmailLogin({ idToken });
+
+    res.status(200).json({ success: true, message: "Login successful", token });
+};
+
 // ====================================== LOGOUT ======================================
 export const logout = async (req, res, next) => {
     await US.logout({ token: req.decoded });

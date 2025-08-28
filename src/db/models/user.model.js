@@ -8,6 +8,10 @@ export const userRole = {
     user: "user",
     admin: "admin",
 };
+export const userProvider = {
+    system: "system",
+    google: "google",
+}
 
 const userSchema = new mongoose.Schema(
     {
@@ -16,7 +20,6 @@ const userSchema = new mongoose.Schema(
             required: [true, "Name is required"],
             trim: true,
             min: [3, "Name must be at least 3 characters long"],
-            max: [15, "Name must be at most 15 characters long"],
         },
         email: {
             type: String,
@@ -38,11 +41,11 @@ const userSchema = new mongoose.Schema(
             type: Number,
             min: [18, "You must be at least 18 years old"],
             max: [60, "You must be at most 60 years old"],
-            required: [true, "Age is required"],
+            required: function () { return this.provider === userProvider.system },
         },
         password: {
             type: String,
-            required: [true, "Password is required"],
+            required: function () { return this.provider === userProvider.system },
             trim: true,
         },
         phone: {
@@ -53,7 +56,7 @@ const userSchema = new mongoose.Schema(
         gender: {
             type: String,
             enum: [userGender.male, userGender.female],
-            required: [true, "Gender is required"],
+            required: function () { return this.provider === userProvider.system },
             set: (value) => {
                 if (!value) return undefined;
                 value = value.toLowerCase();
@@ -68,6 +71,11 @@ const userSchema = new mongoose.Schema(
         },
         otp: {
             type: String
+        },
+        provider: {
+            type: String,
+            enum: Object.values(userProvider),
+            default: userProvider.system
         }
     },
     {
