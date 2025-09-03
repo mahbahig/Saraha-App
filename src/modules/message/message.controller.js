@@ -8,3 +8,12 @@ export const createMessage = async (req, res, next) => {
 
     res.status(201).json({ success: true, message: "Message created successfully", message });
 };
+
+// ====================================== GET ALL MESSAGES ======================================
+export const getAllMessages = async (req, res, next) => {
+    const userId = req.user.id;
+
+    const messages = await MS.getAllMessages({ userId });
+
+    res.status(200).json({ success: true, messages });
+};

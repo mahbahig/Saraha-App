@@ -12,3 +12,9 @@ export const createMessage = async ({ content, userId }) => {
     const message = Message.create({ content, userId });
     return message
 };
+
+// ====================================== GET ALL MESSAGES ======================================
+export const getAllMessages = async ({ userId }) => {
+    const messages = await Message.find({ userId });
+    return messages;
+};

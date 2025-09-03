@@ -6,5 +6,6 @@ import { validation, authentication } from "../../middleware/index.js";
 const messageRouter = Router();
 
 messageRouter.post("/create", validation(MV.createMessageSchema), MC.createMessage);
+messageRouter.get("/", authentication, MC.getAllMessages);
 
 export default messageRouter;
