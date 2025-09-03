@@ -18,3 +18,10 @@ export const getAllMessages = async ({ userId }) => {
     const messages = await Message.find({ userId });
     return messages;
 };
+
+// ====================================== GET MESSAGE ======================================
+export const getMessage = async ({ userId, messageId }) => {
+    const message = await Message.findOne({ userId, _id: messageId });
+
+    return message;
+};

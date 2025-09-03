@@ -7,5 +7,6 @@ const messageRouter = Router();
 
 messageRouter.post("/create", validation(MV.createMessageSchema), MC.createMessage);
 messageRouter.get("/", authentication, MC.getAllMessages);
+messageRouter.get("/:id", authentication, MC.getMessage);
 
 export default messageRouter;

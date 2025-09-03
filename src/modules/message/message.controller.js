@@ -17,3 +17,13 @@ export const getAllMessages = async (req, res, next) => {
 
     res.status(200).json({ success: true, messages });
 };
+
+// ====================================== GET MESSAGE ======================================
+export const getMessage = async (req, res, next) => {
+    const userId = req.user.id;
+    const messageId = req.params.id;
+
+    const message = await MS.getMessage({ userId, messageId });
+
+    res.status(200).json({ success: true, message });
+};
