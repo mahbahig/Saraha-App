@@ -1,5 +1,5 @@
 import express from 'express';
-import bootstrap from './src/app.controller.js';
+import bootstrap from './src/app.bootstrap.js';
 import dotenv from 'dotenv';
 
 dotenv.config({ path: "./src/config/.env" });

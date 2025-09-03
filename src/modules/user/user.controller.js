@@ -85,3 +85,10 @@ export const resetPassword = async (req, res, next) => {
 
     res.status(200).json({ success: true, message: "Password updated successfully" });
 };
+
+// ====================================== CHANGE PROFILE PICTURE ======================================
+export const changeProfilePicture = async (req, res, next) => {
+    await US.changeProfilePicture({ user: req.user, file: req.file });
+
+    res.status(200).json({ success: true, message: "Profile picture updated successfully" });
+};

@@ -1,7 +1,7 @@
 import { customAlphabet, nanoid } from "nanoid";
 import revokeToken from "../../db/models/revokeToken.model.js";
 import { User, userProvider } from "../../db/models/user.model.js";
-import { Compare, Decrypt, Encrypt, eventEmitter, generateToken, Hash, verifyToken } from "../../utils/index.js";
+import { Cloudinary, Compare, Decrypt, Encrypt, eventEmitter, generateToken, Hash, verifyToken } from "../../utils/index.js";
 import  { OAuth2Client } from "google-auth-library";
 
 // ====================================== SIGNUP ======================================
@@ -222,6 +222,16 @@ export const resetPassword = async ({ email, otp, newPassword }) => {
     // Hash new password and save it
     user.password = await Hash({ plainText: newPassword });
     user.otp = "";
+    await user.save();
+};
+
+// ====================================== CHANGE PROFILE PICTURE ======================================
+export const changeProfilePicture = async ({ user, file }) => {
+    // Upload image to cloudinary and get the url
+    const data = await Cloudinary.uploader.upload(file?.path)
+
+    // Save url to user profile
+    user.profilePicture = data.secure_url;
     await user.save();
 };
 

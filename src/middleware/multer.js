@@ -6,7 +6,7 @@ export const allowedExtensions = {
     video: ["video/mp4"]
 }
 
-export const Multer = ({ customPath = "generals", customExtensions = [] }) => {
+export const localMulter = ({ customPath = "generals", customExtensions = [] }) => {
     const fullPath = `uploads/${customPath}`;
     if (!fs.existsSync(fullPath)) {
         fs.mkdirSync(fullPath, { recursive: true });
@@ -21,6 +21,21 @@ export const Multer = ({ customPath = "generals", customExtensions = [] }) => {
             cb(null, `${uniqueSuffix}_${file.originalname}`);
         }
     });
+
+    function fileFilter(req, file, cb) {
+        if (!customExtensions.includes(file.mimetype)) {
+            cb(new Error("Invalid file type"));
+        } else {
+            cb(null, true);
+        }
+    }
+
+    const upload = multer({ storage, fileFilter });
+    return upload;
+}
+
+export const hostMulter = ({ customExtensions = [] }) => {
+    const storage = multer.diskStorage({ });
 
     function fileFilter(req, file, cb) {
         if (!customExtensions.includes(file.mimetype)) {

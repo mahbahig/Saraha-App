@@ -37,6 +37,7 @@ const userSchema = new mongoose.Schema(
             default: userRole.user,
             set: (value) => value?.toLowerCase(),
         },
+        profilePicture: String,
         age: {
             type: Number,
             min: [18, "You must be at least 18 years old"],

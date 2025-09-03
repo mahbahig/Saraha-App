@@ -20,6 +20,11 @@ export const loginSchema = {
         password: generalRules.password.required(),
     }).required()
 };
+export const gmailLoginSchema = {
+    body: Joi.object({
+        idToken: Joi.string().required()
+    }),
+};
 export const updatePasswordSchema = {
     body: Joi.object({
         oldPassword: generalRules.password.required(),
@@ -49,4 +54,7 @@ export const updateUserSchema = {
         phone: Joi.string(),
         gender: Joi.string().valid(userGender.male, userGender.female),
     }),
+};
+export const changeProfilePictureSchema = {
+    file: generalRules.file.required()
 };
