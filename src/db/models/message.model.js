@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-messageSchema = new mongoose.Schema(
+const messageSchema = new mongoose.Schema(
     {
         content: {
             type: String,
@@ -11,7 +11,7 @@ messageSchema = new mongoose.Schema(
         userId: {
             type: mongoose.Schema.Types.ObjectId,
             required: [true, "User ID is required"],
-            ref: "User"
+            ref: "User",
         },
     },
     {

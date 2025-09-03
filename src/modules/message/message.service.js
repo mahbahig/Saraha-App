@@ -1,0 +1,14 @@
+import Message from "../../db/models/message.model.js";
+import { User } from "../../db/models/user.model.js";
+
+// ====================================== CREATE MESSAGE ======================================
+export const createMessage = async ({ content, userId }) => {
+    // Check if user exists
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new Error("User not found", { cause: 404 });
+    }
+
+    const message = Message.create({ content, userId });
+    return message
+};
